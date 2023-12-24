@@ -15,7 +15,7 @@ import (
 // Item Структура для отдельного поста.
 type Item struct {
 	Title       string        `xml:"title"`
-	Content     template.HTML `xml:"content"`
+	Content     template.HTML `xml:"description"`
 	PublishedAt string        `xml:"publishedAt"`
 	Link        string        `xml:"link"`
 }
@@ -28,12 +28,10 @@ type MyXMLStruct struct {
 // RSSToStruct Преобразование полученных XML данных в заданную структуру, затем в массив новостей.
 func RSSToStruct(link string) ([]storage.Post, error) {
 	var posts MyXMLStruct
-	if xmlBytes, err := receivingXML(link) {
-		if err != nil {
-			log.Printf("Ошибка при получении данных из XML: %v", err)
-		} else {
-			xml.Unmarshal(xmlBytes, &posts)
-		}
+	if xmlBytes, err := receivingXML(link); err != nil {
+		log.Printf("Failed to get XML: %v", err)
+	} else {
+		xml.Unmarshal(xmlBytes, &posts)
 	}
 	var news []storage.Post
 	for j := range posts.ItemList {
