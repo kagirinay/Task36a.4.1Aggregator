@@ -24,16 +24,10 @@ func New(ctx context.Context, constr string) (*Store, error) {
 // Posts Выводит все существующие новости.
 func (s *Store) Posts(n int) ([]storage.Post, error) {
 	rows, err := s.db.Query(context.Background(), `
-		SELECT
-			id,
-			title,
-			content,
-			publishedAt,
-			link
-		FROM 
-		ORDER BY published DESC
-		;
-		`)
+		SELECT id, title, content, publishedAt, link FROM news
+		ORDER BY publishedAt DESC
+		LIMIT $1;
+		`, n)
 	if err != nil {
 		return nil, err
 	}
@@ -58,4 +52,19 @@ func (s *Store) Posts(n int) ([]storage.Post, error) {
 	}
 	//Важно не забыть проверить rows.Err()
 	return posts, rows.Err()
+}
+
+// AddPost создаёт новую запись и возвращает её ID.
+func (s *Store) AddPost(t storage.Post) error {
+
+	err := s.db.QueryRow(context.Background(), `
+		INSERT INTO news (title, content, publishedAt, link)
+		VALUES ($1, $2, $3, $4) RETURNING id;
+		`,
+		t.Title,
+		t.Content,
+		t.PublishedAt,
+		t.Link,
+	).Scan()
+	return err
 }
