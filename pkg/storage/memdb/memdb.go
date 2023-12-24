@@ -1,8 +1,8 @@
 package memdb
 
-import "Task31a.3.1/pkg/storage"
+import "Task36a.4.1Aggregator/pkg/storage"
 
-// Store Хранилище данных.
+// Store Хранилище данных
 type Store struct{}
 
 // New Конструктор объекта хранилища.

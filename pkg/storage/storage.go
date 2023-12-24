@@ -1,16 +1,16 @@
 package storage
 
-// Post Публикация, получаемая из RSS
+// Post Публикация, получаемая из RSS.
 type Post struct {
-	ID      int    // Номер публикации.
-	Title   string // Заголовок публикации.
-	Content string // Содержание публикации.
-	PubTime int64  // Время публикации.
-	Link    string // Ссылка на источник.
+	ID          int    // Идентификатор записи.
+	Title       string // Заголовок новости.
+	Content     string // Содержание новости.
+	PublishedAt int64  // Время публикации новости.
+	Link        string // Ссылка на источник новости.
 }
 
-// Interface Методы работы с БД.
+// Interface Задаёт контракт на работу с БД.
 type Interface interface {
-	News(limit int) ([]Post, error) // Получаем все публикации.
-	AddPosts(posts []Post) error    // Добавление постов в БД.
+	Posts(n int) ([]Post, error) // Получение последних новостей.
+	AddPost(p Post) error        // Добавление новости в БД.
 }
