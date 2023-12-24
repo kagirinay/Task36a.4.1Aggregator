@@ -8,7 +8,7 @@ import (
 	"Task36a.4.1Aggregator/pkg/storage/postgres"
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -54,7 +54,8 @@ func main() {
 	srv.api = api.New(srv.db)
 
 	//Чтение и раскодирование файла конфигурации.
-	b, err := ioutil.ReadFile("./config.json")
+
+	b, err := os.ReadFile("./config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,7 +79,10 @@ func main() {
 	go func() {
 		for posts := range chanPosts {
 			for i := range posts {
-				db2.AddPost(posts[i])
+				err := db2.AddPost(posts[i])
+				if err != nil {
+					return
+				}
 			}
 		}
 	}()
@@ -105,7 +109,7 @@ func receivingRSS(fileName string, errors chan<- error) config {
 	}
 	defer jsonFile.Close()
 
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+	byteValue, _ := io.ReadAll(jsonFile)
 
 	var links config
 
@@ -117,7 +121,7 @@ func receivingRSS(fileName string, errors chan<- error) config {
 // Получает новости по ссылкам и отправляет новости и ошибки в соответствующие каналы.
 func parseNews(links string, errors chan<- error, posts chan<- []storage.Post, period int) {
 	for {
-		newPosts, err := rss.RSSToStruct(links)
+		newPosts, err := rss.News(links)
 		if err != nil {
 			errors <- err
 			continue
