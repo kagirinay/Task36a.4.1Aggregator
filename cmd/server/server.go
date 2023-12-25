@@ -28,6 +28,10 @@ type config struct {
 }
 
 func main() {
+
+	// Чит, что бы дождаться инициализации БД.
+	time.Sleep(5 * time.Second)
+
 	// Создаём объект сервера.
 	var srv server
 
@@ -54,13 +58,12 @@ func main() {
 	srv.api = api.New(srv.db)
 
 	//Чтение и раскодирование файла конфигурации.
-
-	b, err := os.ReadFile("./config.json")
+	b, err := os.ReadFile("config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 	var config config
-	err = json.Unmarshal(b, &config)
+	json.Unmarshal(b, &config)
 	if err != nil {
 		log.Fatal(err)
 	}

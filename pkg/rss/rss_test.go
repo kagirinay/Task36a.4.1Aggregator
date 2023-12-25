@@ -5,7 +5,7 @@ import (
 )
 
 func TestRSSToStruct(t *testing.T) {
-	ups, err := RSSToStruct("https://habr.com/ru/rss/hub/go/all/?f1=ru")
+	ups, err := News("https://habr.com/ru/rss/hub/go/all/?f1=ru")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -14,7 +14,7 @@ func TestRSSToStruct(t *testing.T) {
 	}
 	t.Logf("Полученно %d новостей\n%+v", len(ups), ups)
 
-	ups, err = RSSToStruct("https://habr.com/ru/rss/best/daily/?f1=ru")
+	ups, err = News("https://habr.com/ru/rss/best/daily/?f1=ru")
 	if err != nil {
 		t.Fatal(err)
 	}

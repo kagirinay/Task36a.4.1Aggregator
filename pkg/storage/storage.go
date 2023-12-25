@@ -12,5 +12,5 @@ type Post struct {
 // Interface Задаёт контракт на работу с БД.
 type Interface interface {
 	Posts(n int) ([]Post, error) // Получение последних новостей.
-	AddPost(p Post) error        // Добавление новости в БД.
+	AddPost(t Post) error        // Добавление новости в БД.
 }

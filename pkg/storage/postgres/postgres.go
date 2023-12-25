@@ -54,12 +54,12 @@ func (s *Store) Posts(n int) ([]storage.Post, error) {
 	return posts, rows.Err()
 }
 
-// AddPost создаёт новую запись и возвращает её ID.
+// AddPost создаёт новую запись.
 func (s *Store) AddPost(t storage.Post) error {
 
 	err := s.db.QueryRow(context.Background(), `
 		INSERT INTO news (title, content, publishedAt, link)
-		VALUES ($1, $2, $3, $4) RETURNING id;
+		VALUES ($1, $2, $3, $4);
 		`,
 		t.Title,
 		t.Content,
