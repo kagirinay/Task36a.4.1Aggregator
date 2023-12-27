@@ -54,20 +54,10 @@ func main() {
 	// Создаём объект API и регистрируем обработчики.
 	srv.api = api.New(srv.db)
 
-	//Чтение и раскодирование файла конфигурации.
-	b, err := os.ReadFile("config.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	var config configJson
-	json.Unmarshal(b, &config)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Создаём каналы для новостей и ошибок.
 	chanPosts := make(chan []storage.Post)
 	chanErr := make(chan error)
+	var config configJson
 
 	// Получение и парсинг ссылок из конфигурации.
 	myLinks := receivingRSS("config.json", chanErr)
@@ -99,6 +89,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// loadConfiguration Чтение и раскодирование файла конфигурации.
+func loadConfiguration(file string) configJson {
+	var config configJson
+	configFile, err := os.Open(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	jsonParser := json.NewDecoder(configFile)
+	jsonParser.Decode(&config)
+	return config
 }
 
 // Получает отдельные ссылки из конфигурации, ошибки направляет в поток ошибок.
