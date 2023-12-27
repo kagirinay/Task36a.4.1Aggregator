@@ -22,15 +22,12 @@ type server struct {
 }
 
 // Конфигурация приложения.
-type config struct {
+type configJson struct {
 	Period  int      `json:"request_period"`
 	LinkArr []string `json:"rss"`
 }
 
 func main() {
-
-	// Чит, что бы дождаться инициализации БД.
-	time.Sleep(5 * time.Second)
 
 	// Создаём объект сервера.
 	var srv server
@@ -62,7 +59,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var config config
+	var config configJson
 	json.Unmarshal(b, &config)
 	if err != nil {
 		log.Fatal(err)
@@ -105,7 +102,7 @@ func main() {
 }
 
 // Получает отдельные ссылки из конфигурации, ошибки направляет в поток ошибок.
-func receivingRSS(fileName string, errors chan<- error) config {
+func receivingRSS(fileName string, errors chan<- error) configJson {
 	jsonFile, err := os.Open(fileName)
 	if err != nil {
 		errors <- err
@@ -114,7 +111,7 @@ func receivingRSS(fileName string, errors chan<- error) config {
 
 	byteValue, _ := io.ReadAll(jsonFile)
 
-	var links config
+	var links configJson
 
 	json.Unmarshal(byteValue, &links)
 
