@@ -61,7 +61,7 @@ func main() {
 	srv.api = api.New(srv.db)
 
 	// loadConfiguration Чтение и раскодирование файла конфигурации.
-	bytes, err := os.ReadFile("config.json")
+	bytes, err := os.ReadFile("C:/Users/kagir/GolandProjects/Task36a.4.1Aggregator/cmd/server/config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
