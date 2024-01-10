@@ -32,7 +32,13 @@ func main() {
 	// Создаём объект сервера.
 	var srv server
 
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	var config configJson
+
+	// Создаём каналы для новостей и ошибок.
+	chanPosts := make(chan []storage.Post)
+	chanErr := make(chan error)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	// Создаём объекты баз данных.
@@ -54,14 +60,22 @@ func main() {
 	// Создаём объект API и регистрируем обработчики.
 	srv.api = api.New(srv.db)
 
-	// Создаём каналы для новостей и ошибок.
-	chanPosts := make(chan []storage.Post)
-	chanErr := make(chan error)
-	var config configJson
+	// loadConfiguration Чтение и раскодирование файла конфигурации.
+	bytes, err := os.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	json.Unmarshal(bytes, &config)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
 	// Получение и парсинг ссылок из конфигурации.
 	myLinks := receivingRSS("config.json", chanErr)
 	for i := range myLinks.LinkArr {
+
 		go parseNews(myLinks.LinkArr[i], chanErr, chanPosts, config.Period)
 	}
 
@@ -91,25 +105,18 @@ func main() {
 	}
 }
 
-// loadConfiguration Чтение и раскодирование файла конфигурации.
-func loadConfiguration(file string) configJson {
-	var config configJson
-	configFile, err := os.Open(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(&config)
-	return config
-}
-
 // Получает отдельные ссылки из конфигурации, ошибки направляет в поток ошибок.
 func receivingRSS(fileName string, errors chan<- error) configJson {
 	jsonFile, err := os.Open(fileName)
 	if err != nil {
 		errors <- err
 	}
-	defer jsonFile.Close()
+	defer func(jsonFile *os.File) {
+		err := jsonFile.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(jsonFile)
 
 	byteValue, _ := io.ReadAll(jsonFile)
 
