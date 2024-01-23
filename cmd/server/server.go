@@ -31,7 +31,6 @@ func main() {
 
 	// Создаём объект сервера.
 	var srv server
-
 	var config configJson
 
 	// Создаём каналы для новостей и ошибок.
@@ -99,7 +98,7 @@ func main() {
 	}()
 
 	// Запуск веб сервера с API и приложением.
-	err = http.ListenAndServe(":80", srv.api.Router())
+	err = http.ListenAndServe("localhost:8080", srv.api.Router())
 	if err != nil {
 		log.Fatal(err)
 	}
