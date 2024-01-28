@@ -39,7 +39,6 @@ func News(link string) ([]storage.Post, error) {
 		item.Title = posts.ItemList[j].Title
 		item.Content = string(posts.ItemList[j].Content)
 		item.Link = posts.ItemList[j].Link
-
 		posts.ItemList[j].PublishedAt = strings.ReplaceAll(posts.ItemList[j].PublishedAt, ",", "")
 		t, err := time.Parse("Mon 2 Jan 2006 15:04:05 0700", posts.ItemList[j].PublishedAt)
 		if err != nil {
@@ -50,6 +49,7 @@ func News(link string) ([]storage.Post, error) {
 		}
 		news = append(news, item)
 	}
+	
 	return news, nil
 }
 
@@ -60,14 +60,13 @@ func receivingXML(url string) ([]byte, error) {
 		return []byte{}, fmt.Errorf("GET error: %v", err)
 	}
 	defer resp.Body.Close()
-
 	if resp.StatusCode != http.StatusOK {
 		return []byte{}, fmt.Errorf("Status error: %v", resp.StatusCode)
 	}
-
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return []byte{}, fmt.Errorf("Read body: %v", err)
 	}
+
 	return data, nil
 }

@@ -10,10 +10,9 @@ func TestRSSToStruct(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(ups) == 0 {
-		t.Fatal("Данные не раскодированны.")
+		t.Fatal("Данные не раскодированы.")
 	}
 	t.Logf("Полученно %d новостей\n%+v", len(ups), ups)
-
 	ups, err = News("https://habr.com/ru/rss/best/daily/?f1=ru")
 	if err != nil {
 		t.Fatal(err)
