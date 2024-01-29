@@ -1,11 +1,21 @@
 package main
 
 import (
+	"Task36a.4.1Aggregator/pkg/api"
 	"Task36a.4.1Aggregator/pkg/conf"
-	"fmt"
+	"Task36a.4.1Aggregator/pkg/rss"
+	"Task36a.4.1Aggregator/pkg/storage"
+	"Task36a.4.1Aggregator/pkg/storage/memdb"
+	"Task36a.4.1Aggregator/pkg/storage/postgres"
+	"context"
+	"encoding/json"
+	"io"
+	"log"
+	"net/http"
+	"os"
+	"time"
 )
 
-/*
 // Сервер.
 type server struct {
 	db  storage.Interface
@@ -13,7 +23,7 @@ type server struct {
 }
 
 func main() {
-
+	conf.NewConfig()
 	// Создаём объект сервера.
 	var srv server
 	// Создаём каналы для новостей и ошибок.
@@ -94,11 +104,4 @@ func parseNews(links string, errors chan<- error, posts chan<- []storage.Post, p
 		posts <- newPosts
 		time.Sleep(time.Minute * time.Duration(period))
 	}
-}
-*/
-
-func main() {
-	fmt.Println("Считывание конфигурации")
-	fmt.Println(conf.NewConfig())
-	conf.NewConfig()
 }
