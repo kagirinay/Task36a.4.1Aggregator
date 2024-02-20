@@ -31,7 +31,10 @@ func News(link string) ([]storage.Post, error) {
 	if xmlBytes, err := receivingXML(link); err != nil {
 		log.Printf("Failed to get XML: %v", err)
 	} else {
-		xml.Unmarshal(xmlBytes, &posts)
+		err := xml.Unmarshal(xmlBytes, &posts)
+		if err != nil {
+			return nil, err
+		}
 	}
 	var news []storage.Post
 	for j := range posts.ItemList {
@@ -49,7 +52,7 @@ func News(link string) ([]storage.Post, error) {
 		}
 		news = append(news, item)
 	}
-	
+
 	return news, nil
 }
 
@@ -61,11 +64,11 @@ func receivingXML(url string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return []byte{}, fmt.Errorf("Status error: %v", resp.StatusCode)
+		return []byte{}, fmt.Errorf("status error: %v", resp.StatusCode)
 	}
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return []byte{}, fmt.Errorf("Read body: %v", err)
+		return []byte{}, fmt.Errorf("read body: %v", err)
 	}
 
 	return data, nil

@@ -7,7 +7,7 @@ import (
 func TestRSSToStruct(t *testing.T) {
 	ups, err := News("https://habr.com/ru/rss/hub/go/all/?f1=ru")
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 	if len(ups) == 0 {
 		t.Fatal("Данные не раскодированы.")
@@ -15,10 +15,10 @@ func TestRSSToStruct(t *testing.T) {
 	t.Logf("Полученно %d новостей\n%+v", len(ups), ups)
 	ups, err = News("https://habr.com/ru/rss/best/daily/?f1=ru")
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 	if len(ups) == 0 {
-		t.Fatal("Данные не раскодированы.")
+		t.Error("Данные не раскодированы.")
 	}
 	t.Logf("Получено %d новостей\n%+v", len(ups), ups)
 }

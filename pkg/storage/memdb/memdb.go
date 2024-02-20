@@ -7,22 +7,27 @@ type Store struct{}
 
 // New Конструктор объекта хранилища.
 func New() *Store {
+
 	return new(Store)
 }
 
 func (s *Store) Posts() ([]storage.Post, error) {
+
 	return posts, nil
 }
 
 func (s *Store) AddPost(storage.Post) error {
+
 	return nil
 }
 
 func (s *Store) UpdatePost(storage.Post) error {
+
 	return nil
 }
 
 func (s *Store) DeletePost(storage.Post) error {
+
 	return nil
 }
 

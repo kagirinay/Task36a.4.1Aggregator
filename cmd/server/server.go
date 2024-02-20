@@ -38,7 +38,7 @@ func main() {
 	defer cancel()
 	db2, err := postgres.New(ctx, "postgres://postgres:password@192.168.58.133:5432/news")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	_ = db2
 	// Инициализируем хранилище выбранного сервера БД.

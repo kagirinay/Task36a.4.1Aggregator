@@ -18,6 +18,7 @@ func New(ctx context.Context, constr string) (*Store, error) {
 		return nil, err
 	}
 	s := Store{db: db}
+
 	return &s, err
 }
 
@@ -32,7 +33,6 @@ func (s *Store) Posts(n int) ([]storage.Post, error) {
 		return nil, err
 	}
 	defer rows.Close()
-
 	var posts []storage.Post
 	// Итерирование по результату выполнения запроса и сканирование каждой строки в переменную.
 	for rows.Next() {
@@ -50,13 +50,13 @@ func (s *Store) Posts(n int) ([]storage.Post, error) {
 		// Добавление переменной в массив результатов.
 		posts = append(posts, t)
 	}
+
 	//Важно не забыть проверить rows.Err()
 	return posts, rows.Err()
 }
 
 // AddPost создаёт новую запись.
 func (s *Store) AddPost(t storage.Post) error {
-
 	err := s.db.QueryRow(context.Background(), `
 		INSERT INTO news (title, content, publishedAt, link)
 		VALUES ($1, $2, $3, $4);
@@ -66,5 +66,6 @@ func (s *Store) AddPost(t storage.Post) error {
 		t.PublishedAt,
 		t.Link,
 	).Scan()
+
 	return err
 }
