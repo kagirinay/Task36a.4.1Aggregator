@@ -94,14 +94,16 @@ func receivingRSS(fileName string, errors chan<- error) *conf.ConJson {
 }
 
 // Получает новости по ссылкам и отправляет новости и ошибки в соответствующие каналы.
-func parseNews(links string, errors chan<- error, posts chan<- []storage.Post, period int) {
+func parseNews(links string, errors chan<- error, posts chan<- []storage.Post, period int) error {
 	for {
 		newPosts, err := rss.News(links)
 		if err != nil {
 			errors <- err
-			continue
+			return err
 		}
 		posts <- newPosts
 		time.Sleep(time.Minute * time.Duration(period))
 	}
+
+	return nil
 }

@@ -28,13 +28,13 @@ type MyXMLStruct struct {
 // News Преобразование полученных XML данных в заданную структуру, затем в массив новостей.
 func News(link string) ([]storage.Post, error) {
 	var posts MyXMLStruct
-	if xmlBytes, err := receivingXML(link); err != nil {
-		log.Printf("Failed to get XML: %v", err)
-	} else {
+	if xmlBytes, err := receivingXML(link); err == nil {
 		err := xml.Unmarshal(xmlBytes, &posts)
 		if err != nil {
 			return nil, err
 		}
+	} else {
+		log.Printf("Failed to get XML: %v", err)
 	}
 	var news []storage.Post
 	for j := range posts.ItemList {
